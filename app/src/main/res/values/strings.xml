@@ -1,20 +1,20 @@
 <resources>
-    <string name="app_name">MedMobile</string>
-    <string name="email">E-mailiniz</string>
-    <string name="password">Şifreniz</string>
-    <string name="header">MedMobile</string>
-    <string name="register">Kayıt Ol</string>
-    <string name="login">Giriş</string>
+    <string name="app_name">Psiconnect</string>
+    <string name="email">Mail</string>
+    <string name="password">Contraseña</string>
+    <string name="header">Psiconnect</string>
+    <string name="register">Registrarse</string>
+    <string name="login">Iniciar sesion</string>
 
-    <string name="profile">Profile</string>
-    <string name="logout">Logout</string>
+    <string name="profile">Perfil</string>
+    <string name="logout">Cerrar sesion</string>
     <string name="news">Haberler</string>
 
-    <string name="appointment">Randevu Al</string>
-    <string name="cancel">İptal Et</string>
+    <string name="appointment">Turno Al</string>
+    <string name="cancel">Cancelar Et</string>
 
-    <string name="doctor">Doktor olarak giriş yap</string>
-    <string name="patient">Hasta olarak giriş yap</string>
+    <string name="doctor">Profesional</string>
+    <string name="patient">Paciente</string>
 
     <string-array name="doctor_specialties">
         <item>Ağız ve Diş Sağlığı</item>
