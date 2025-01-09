@@ -58,7 +58,7 @@ class DoctorRegisterActivity : AppCompatActivity() {
             if (!DoctorEmail.contains("@doctor")) {
                 Toast.makeText(
                     this,
-                    "Geçerli bir doktor e-posta adresi giriniz",
+                    "Ingrese una dirección de correo electrónico válida del médico",
                     Toast.LENGTH_LONG
                 ).show()
             } else if (DoctorName != "" && DoctorSurname != "" && DoctorAge.toString() != "" && DoctorField != "" && DoctorEmail.toString() != "" && DoctorPassword.toString() != "") {
@@ -97,7 +97,7 @@ class DoctorRegisterActivity : AppCompatActivity() {
                     }
 
             } else {
-                Toast.makeText(this, "Eksik bilgi girmeyiniz", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "No introduzca información incompleta", Toast.LENGTH_LONG).show()
             }
         }
     }
