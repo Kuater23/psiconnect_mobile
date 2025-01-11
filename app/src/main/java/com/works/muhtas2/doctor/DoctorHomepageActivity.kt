@@ -38,10 +38,10 @@ class DoctorHomepageActivity : AppCompatActivity() {
                 val selectedAppointment = appointments[position]
 
                 AlertDialog.Builder(this)
-                    .setTitle("Randevuyu İptal Et")
-                    .setMessage("Bu randevuyu iptal etmek istediğinize emin misiniz?")
+                    .setTitle("Cancelar cita")
+                    .setMessage("¿Estás seguro de que quieres cancelar esta cita?")
                     .setPositiveButton("Evet") { _, _ ->
-                        // Randevuyu hem doktor koleksiyonundan hem de hasta koleksiyonundan sil
+                        // Eliminar la cita de la colección de médicos y de la colección de pacientes
                         doctorAppointmentService.deleteAppointment(
                             doctorEmail,
                             selectedAppointment.patientEmail!!,
@@ -50,10 +50,10 @@ class DoctorHomepageActivity : AppCompatActivity() {
                             if (success) {
                                 Toast.makeText(
                                     this,
-                                    "Randevu başarıyla silindi.",
+                                    "La cita se ha eliminado con éxito.",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                // Listenin güncellenmesi için randevuları tekrar çek
+                                // Repetir citas para actualizar la lista
                                 doctorAppointmentService.getAppointmentsForDoctor(doctorEmail) { updatedAppointments ->
                                     adapter.clear()
                                     adapter.addAll(updatedAppointments)
@@ -62,13 +62,13 @@ class DoctorHomepageActivity : AppCompatActivity() {
                             } else {
                                 Toast.makeText(
                                     this,
-                                    "Randevu silinirken bir hata oluştu.",
+                                    "Se ha producido un error al eliminar la cita.",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
                     }
-                    .setNegativeButton("Hayır", null)
+                    .setNegativeButton("No", null)
                     .show()
 
                 true
@@ -94,16 +94,16 @@ class DoctorHomepageActivity : AppCompatActivity() {
             }
             R.id.doctor_logout -> {
                 AlertDialog.Builder(this).apply {
-                    setTitle("Hesaptan çıkış yap")
-                    setMessage("Çıkış yapmak istediğinize emin misiniz?")
-                    setPositiveButton("Evet") { _, _ ->
+                    setTitle("Cerrar sesion")
+                    setMessage("Seguro que quieres cerrar sesion?")
+                    setPositiveButton("Si") { _, _ ->
                         FirebaseAuth.getInstance().signOut()
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                         finish()
                     }
-                    setNegativeButton("Hayır", null)
+                    setNegativeButton("No", null)
 
                 }.create().show()
             }
