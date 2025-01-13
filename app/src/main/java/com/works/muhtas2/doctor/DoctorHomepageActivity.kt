@@ -25,10 +25,9 @@ class DoctorHomepageActivity : AppCompatActivity() {
         appointmentsList = findViewById(R.id.appointmentsList)
 
         val doctorAppointmentService = DoctorAppointmentService()
-        val doctorEmail =
-            FirebaseAuth.getInstance().currentUser?.email // Doktor e-posta adresini buraya girin
+        val doctorEmail = FirebaseAuth.getInstance().currentUser?.email
 
-        // Doktora ait randevuları çekiyoruz
+        // Obtener citas del doctor
         doctorAppointmentService.getAppointmentsForDoctor(doctorEmail!!) { appointments ->
             Log.d("appointments", appointments.toString())
             val adapter = DoctorAppointmentAdapter(this, appointments)
@@ -40,7 +39,7 @@ class DoctorHomepageActivity : AppCompatActivity() {
                 AlertDialog.Builder(this)
                     .setTitle("Cancelar cita")
                     .setMessage("¿Estás seguro de que quieres cancelar esta cita?")
-                    .setPositiveButton("Evet") { _, _ ->
+                    .setPositiveButton("Sí") { _, _ ->
                         // Eliminar la cita de la colección de médicos y de la colección de pacientes
                         doctorAppointmentService.deleteAppointment(
                             doctorEmail,
@@ -53,7 +52,7 @@ class DoctorHomepageActivity : AppCompatActivity() {
                                     "La cita se ha eliminado con éxito.",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                // Repetir citas para actualizar la lista
+                                // Actualizar la lista de citas
                                 doctorAppointmentService.getAppointmentsForDoctor(doctorEmail) { updatedAppointments ->
                                     adapter.clear()
                                     adapter.addAll(updatedAppointments)
@@ -84,19 +83,19 @@ class DoctorHomepageActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.doctor_profile -> {
-                var intent = Intent(this, DoctorProfileActivity::class.java)
+                val intent = Intent(this, DoctorProfileActivity::class.java)
                 startActivity(intent)
             }
 
             R.id.doctor_news -> {
-                var intent = Intent(this, NewsActivity::class.java)
+                val intent = Intent(this, NewsActivity::class.java)
                 startActivity(intent)
             }
             R.id.doctor_logout -> {
                 AlertDialog.Builder(this).apply {
-                    setTitle("Cerrar sesion")
-                    setMessage("Seguro que quieres cerrar sesion?")
-                    setPositiveButton("Si") { _, _ ->
+                    setTitle("Cerrar sesión")
+                    setMessage("¿Seguro que quieres cerrar sesión?")
+                    setPositiveButton("Sí") { _, _ ->
                         FirebaseAuth.getInstance().signOut()
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -104,11 +103,9 @@ class DoctorHomepageActivity : AppCompatActivity() {
                         finish()
                     }
                     setNegativeButton("No", null)
-
                 }.create().show()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 }
-

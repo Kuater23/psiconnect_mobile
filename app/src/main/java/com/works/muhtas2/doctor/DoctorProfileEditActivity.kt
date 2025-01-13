@@ -79,7 +79,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                 AlertDialog.Builder(this).apply {
                     setTitle("Guardar cambios")
                     setMessage("¿Quieres actualizar?")
-                    setPositiveButton("Yes") { _, _ ->
+                    setPositiveButton("Sí") { _, _ ->
                         val name = edtDName.text.toString()
                         val surname = edtDSurname.text.toString()
                         val age = edtDAge.text.toString()
@@ -137,7 +137,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                 openGallery()
             } else {
                 // Permiso denegado, no se puede acceder a la galería
-                Toast.makeText(this, "Galeriye erişim izni reddedildi", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Permiso de acceso a la galería denegado", Toast.LENGTH_SHORT).show()
             }
         }
     }
