@@ -28,7 +28,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
     lateinit var btnSaveChanges: Button
     lateinit var imgDoctorProfile: ImageView
 
-    lateinit var downloadUri: Uri
+    var downloadUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,32 +73,29 @@ class DoctorProfileEditActivity : AppCompatActivity() {
         btnSaveChanges.setOnClickListener {
             if (edtDName.text.isNotEmpty() &&
                 edtDSurname.text.isNotEmpty() &&
-                edtDAge.text.isNotEmpty() &&
-                edtOldPassword.text.isNotEmpty() &&
-                edtNewPassword.text.isNotEmpty()
+                edtDAge.text.isNotEmpty()
             ) {
                 // Vamos a obtener el consentimiento del usuario con AlertDialog
                 AlertDialog.Builder(this).apply {
-                    setTitle("Cambio de contraseña")
+                    setTitle("Guardar cambios")
                     setMessage("¿Quieres actualizar?")
                     setPositiveButton("Yes") { _, _ ->
-                        val oldPassword = edtOldPassword.text.toString()
-                        val newPassword = edtNewPassword.text.toString()
                         val name = edtDName.text.toString()
                         val surname = edtDSurname.text.toString()
                         val age = edtDAge.text.toString()
                         val field = spinnerField.selectedItem.toString()
+                        val newPassword = edtNewPassword.text.toString()
 
-                        // Compruebe la contraseña anterior y actualícela
-                        verifyAndUpdate(
-                            oldPassword,
-                            newPassword,
+                        // Actualizar la información en Firestore
+                        updateDoctorInFirestore(
+                            user?.uid!!,
                             name,
                             surname,
                             age,
                             field,
-                            user?.email!!,
-                            downloadUri.toString()
+                            user.email!!,
+                            newPassword,
+                            downloadUri?.toString()
                         )
                         // Inicie el intent con un tiempo de retraso específico
                         Handler().postDelayed({
@@ -108,7 +105,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                             )
                             startActivity(intent)
                             finish()
-                        }, 2000) // 2 saniye gecikme süresi
+                        }, 2000) // 2 segundos de retraso
                     }
                     setNegativeButton("No", null)
                 }.create().show()
@@ -186,52 +183,6 @@ class DoctorProfileEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun verifyAndUpdate(
-        oldPassword: String,
-        newPassword: String,
-        first: String,
-        last: String,
-        age: String,
-        field: String,
-        email: String,
-        image: String?
-    ) {
-        val user = FirebaseAuth.getInstance().currentUser
-
-        val credential = EmailAuthProvider.getCredential(user?.email ?: "", oldPassword)
-        user?.reauthenticate(credential)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                user.updatePassword(newPassword).addOnCompleteListener { updateTask ->
-                    if (updateTask.isSuccessful) {
-                        // Ahora actualiza la otra información en Firestore
-                        updateDoctorInFirestore(
-                            user.uid,
-                            first,
-                            last,
-                            age,
-                            field,
-                            email,
-                            newPassword,
-                            image
-                        )
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Şifre güncellenemedi: ${updateTask.exception?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } else {
-                Toast.makeText(
-                    this,
-                    "Eski şifre yanlış: ${task.exception?.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
     private fun updateDoctorInFirestore(
         userId: String,
         first: String,
@@ -239,34 +190,44 @@ class DoctorProfileEditActivity : AppCompatActivity() {
         age: String,
         field: String,
         email: String,
-        password: String,
+        newPassword: String,
         image: String?
     ) {
         val db = FirebaseFirestore.getInstance()
 
-        val doctorDataInfo = DoctorData(
-            UID = userId,
-            first = first,
-            last = last,
-            age = age,
-            field = field,
-            email = email,
-            password = password,
-            image = image
-        )
+        // Obtener la contraseña actual del usuario
+        db.collection("doctors").document(email).get().addOnSuccessListener { document ->
+            if (document != null && document.exists()) {
+                val currentPassword = document.getString("password") ?: ""
 
-        db.collection("doctors")
-            .document(email)
-            .set(doctorDataInfo)
-            .addOnSuccessListener {
-                Toast.makeText(this, "La información se ha actualizado con éxito", Toast.LENGTH_SHORT).show()
+                // Usar la nueva contraseña solo si se ha proporcionado
+                val passwordToUpdate = if (newPassword.isNotEmpty()) newPassword else currentPassword
+
+                val doctorDataInfo = DoctorData(
+                    UID = userId,
+                    first = first,
+                    last = last,
+                    age = age,
+                    field = field,
+                    email = email,
+                    password = passwordToUpdate,
+                    image = image
+                )
+
+                db.collection("doctors")
+                    .document(email)
+                    .set(doctorDataInfo)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "La información se ha actualizado con éxito", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(
+                            this,
+                            "Error al actualizar la información: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "Error al actualizar la información: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        }
     }
 }
