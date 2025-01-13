@@ -65,7 +65,7 @@ class DoctorRegisterActivity : AppCompatActivity() {
                 auth.createUserWithEmailAndPassword(DoctorEmail, DoctorPassword)
                     .addOnCompleteListener(DoctorRegisterActivity()) { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(this, "User added succesfully", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "User added successfully", Toast.LENGTH_LONG).show()
                             val user = auth.currentUser
                             val doctorData = DoctorData(
                                 user!!.uid,
@@ -79,23 +79,19 @@ class DoctorRegisterActivity : AppCompatActivity() {
                             )
                             db.collection("doctors").document(user.email!!).set(doctorData)
                                 .addOnSuccessListener {
-                                    Log.d(
-                                        "Firestore",
-                                        "Doctor DocumentSnapshot successfully written!"
-                                    )
-                                }.addOnFailureListener {
-                                    Log.e("Firestore", it.message.toString())
+                                    Log.d("Firestore", "Doctor DocumentSnapshot successfully written!")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e("Firestore", "Error writing document", e)
                                 }
                             Log.d("doctor", doctorData.toString())
-                            val intent =
-                                Intent(this@DoctorRegisterActivity, DoctorLoginActivity::class.java)
+                            val intent = Intent(this@DoctorRegisterActivity, DoctorLoginActivity::class.java)
                             startActivity(intent)
                             finish()
                         } else {
                             Toast.makeText(this, task.exception!!.message, Toast.LENGTH_LONG).show()
                         }
                     }
-
             } else {
                 Toast.makeText(this, "No introduzca información incompleta", Toast.LENGTH_LONG).show()
             }
