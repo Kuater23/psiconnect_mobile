@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "359538717303",
-    "project_id": "muhtas2-789ac",
-    "storage_bucket": "muhtas2-789ac.appspot.com"
+    "project_number": "953533544770",
+    "firebase_url": "https://psiconnect-eb98a-default-rtdb.firebaseio.com",
+    "project_id": "psiconnect-eb98a",
+    "storage_bucket": "psiconnect-eb98a.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:359538717303:android:0e525b9581b355d5de0c72",
+        "mobilesdk_app_id": "1:953533544770:android:5e26f335a4f1bc507870db",
         "android_client_info": {
           "package_name": "com.works.muhtas2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "359538717303-16pj4calfbcgq8usiiu7lukbi1bn65nh.apps.googleusercontent.com",
+          "client_id": "953533544770-j5flo9m30pi1lnri9csb9pannkkhapj4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCyG5EOVG7hX_nAV84EMSsj8YaqAWmlovg"
+          "current_key": "AIzaSyAPI7Yu09nBXKq5HO2ynGTkN2XijcimApk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "359538717303-16pj4calfbcgq8usiiu7lukbi1bn65nh.apps.googleusercontent.com",
+              "client_id": "953533544770-j5flo9m30pi1lnri9csb9pannkkhapj4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
