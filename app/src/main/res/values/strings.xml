@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Psiconnect</string>
+    <string name="app_name">Psi Connect</string>
     <string name="email">Mail</string>
     <string name="password">Contraseña</string>
-    <string name="header">Psiconnect</string>
+    <string name="header">Psi Connect</string>
     <string name="register">Registrarse</string>
     <string name="login">Iniciar sesion</string>
 
