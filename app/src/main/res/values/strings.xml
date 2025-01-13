@@ -15,8 +15,13 @@
 
     <string name="doctor">Profesional</string>
     <string name="patient">Paciente</string>
-
+s
     <string-array name="doctor_specialties">
+        <item>Psicología Clínica</item>
+        <item>Psicología Educativa</item>s
+        <item>Psicología Organizacional</item>
+        <item>Psicología Social</item>
+        <item>Psicología Forense</item>
         <item>Ağız ve Diş Sağlığı</item>
         <item>Anesteziyoloji ve Reanimasyon</item>
         <item>Beslenme ve Diyetetik</item>

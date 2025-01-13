@@ -22,7 +22,8 @@ class PatientProfileActivity : AppCompatActivity() {
     lateinit var txtPEmail: TextView
     lateinit var btnDeleteAccount: Button
     lateinit var btnEditProfile: Button
-    lateinit var imgPatientProfile : ImageView
+    lateinit var imgPatientProfile: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_profile)
@@ -38,94 +39,69 @@ class PatientProfileActivity : AppCompatActivity() {
         btnEditProfile = findViewById(R.id.btnEditProfile)
         imgPatientProfile = findViewById(R.id.imgPatientProfilePicture)
 
-
         if (user != null) {
             db.collection("patients").document(user.email!!)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         val client = document.toObject(PatientData::class.java)
-                        //Log.d("Firestore-Client", client.toString())
                         if (client != null) {
-                            txtPName.text = "İsminiz : " + client.first ?: "N/A"
-                            txtPSurname.text = "Soyisiminiz : " + client.last ?: "N/A"
-                            txtPAge.text = "Yaşınız : " + client.age ?: "N/A"
-                            txtPEmail.text = "Emailiniz : " + client.email ?: "N/A"
-                            //Log.d("Firestore-img",client.image.toString())
+                            txtPName.text = "Nombre: " + client.first ?: "N/A"
+                            txtPSurname.text = "Apellido: " + client.last ?: "N/A"
+                            txtPAge.text = "Edad: " + client.age ?: "N/A"
+                            txtPEmail.text = "Correo electrónico: " + client.email ?: "N/A"
                             Glide.with(this).load(client.image).into(imgPatientProfile)
                         }
                     } else {
-                        Log.d("DocumentSnapshot", "No such document")
+                        Log.d("DocumentSnapshot", "No existe tal documento")
                     }
                 }.addOnFailureListener { exception ->
-                    Log.d("get failed with ", exception.message.toString())
+                    Log.d("Error al obtener", exception.message.toString())
                 }
         }
+
         btnDeleteAccount.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("Hesabı Sil")
-                .setMessage("Hesabınızı silmek istediğinizden emin misiniz?")
-                .setPositiveButton("Evet") { _, _ ->
-                    // Kullanıcının hesabını sil
+                .setTitle("Eliminar cuenta")
+                .setMessage("¿Estás seguro de que deseas eliminar tu cuenta?")
+                .setPositiveButton("Sí") { _, _ ->
                     val user = FirebaseAuth.getInstance().currentUser
                     user?.delete()
                         ?.addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Log.d(
-                                    "FirebaseAuth",
-                                    "Kullanıcı hesabı silindi."
-                                )// Firestore'dan da kullanıcıyı silin
+                                Log.d("FirebaseAuth", "Cuenta de usuario eliminada.")
                                 val db = FirebaseFirestore.getInstance()
                                 db.collection("patients")
                                     .document(user.email!!)
                                     .delete()
                                     .addOnSuccessListener {
-                                        Log.d(
-                                            "Firestore",
-                                            "Döküman başarılı bir şekilde silindi!"
-                                        )
+                                        Log.d("Firestore", "Documento eliminado con éxito!")
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.w(
-                                            "Firestore",
-                                            "Hata oluştu.",
-                                            e
-                                        )
+                                        Log.w("Firestore", "Error al eliminar el documento.", e)
                                     }
-                                // Başarı durumunda kullanıcıyı bir sonraki aktiviteye yönlendir
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()
                             } else {
-                                // Kullanıcı silinirken hata oluştu
-                                Log.w(
-                                    "Firestore",
-                                    "Kullanıcı silinirken hata oluştu.",
-                                    task.exception
-                                )
+                                Log.w("Firestore", "Error al eliminar la cuenta de usuario.", task.exception)
                             }
                         }
                 }
-                .setNegativeButton("Hayır", null)
+                .setNegativeButton("No", null)
                 .show()
         }
 
-
         btnEditProfile.setOnClickListener {
             val intent = Intent(this, PatientProfileEditActivity::class.java)
-
-
-
             startActivity(intent)
             finish()
-
         }
-
     }
 
     override fun onResume() {
         super.onResume()
-        // Verileri güncelle
+        // Actualizar datos
         updateData()
     }
 
@@ -139,17 +115,15 @@ class PatientProfileActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val patientData = document.toObject(PatientData::class.java)
-                    // Verileri EditText'lere atayın
-                    txtPName.setText("İsim: ${patientData?.first}")
-                    txtPSurname.setText("Soyisim: ${patientData?.last}")
-                    txtPAge.setText("Yaş: ${patientData?.age}")
-                    txtPEmail.setText("Email: ${patientData?.email}")
+                    // Asignar datos a los TextViews
+                    txtPName.text = "Nombre: ${patientData?.first}"
+                    txtPSurname.text = "Apellido: ${patientData?.last}"
+                    txtPAge.text = "Edad: ${patientData?.age}"
+                    txtPEmail.text = "Correo electrónico: ${patientData?.email}"
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error getting client data: ${e.message}", e)
+                Log.e("Firestore", "Error al obtener los datos del cliente: ${e.message}", e)
             }
     }
-
-
 }

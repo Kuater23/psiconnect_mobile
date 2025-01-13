@@ -1,6 +1,5 @@
 package com.works.muhtas2.doctor
 
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,7 +23,7 @@ class DoctorProfileActivity : AppCompatActivity() {
     lateinit var txtDField: TextView
     lateinit var btnDeleteDAccount: Button
     lateinit var btnEditProfile: Button
-    lateinit var imgDoctorProfile : ImageView
+    lateinit var imgDoctorProfile: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +51,15 @@ class DoctorProfileActivity : AppCompatActivity() {
                             txtDName.text = "Nombre: " + doctorData.first ?: "N/A"
                             txtDSurname.text = "Apellido: " + doctorData.last ?: "N/A"
                             txtDAge.text = "Edad: " + doctorData.age ?: "N/A"
-                            txtDEmail.text = "Mail: " + doctorData.email ?: "N/A"
-                            txtDField.text = "Uzmanlık Alanınız: " + doctorData.field?: "N/A"
+                            txtDEmail.text = "Correo: " + doctorData.email ?: "N/A"
+                            txtDField.text = "Especialidad: " + doctorData.field ?: "N/A"
                             Glide.with(this).load(doctorData.image).into(imgDoctorProfile)
                         }
                     } else {
-                        Log.d("DocumentSnapshot", "No such document")
+                        Log.d("DocumentSnapshot", "No existe tal documento")
                     }
                 }.addOnFailureListener { exception ->
-                    Log.d("get failed with ", exception.message.toString())
+                    Log.d("Error al obtener", exception.message.toString())
                 }
         }
 
@@ -74,26 +73,17 @@ class DoctorProfileActivity : AppCompatActivity() {
                     user?.delete()
                         ?.addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Log.d(
-                                    "FirebaseAuth",
-                                    "La cuenta de usuario ha sido eliminada."
-                                )// Eliminar también al usuario de Firestore
+                                Log.d("FirebaseAuth", "La cuenta de usuario ha sido eliminada.")
+                                // Eliminar también al usuario de Firestore
                                 val db = FirebaseFirestore.getInstance()
                                 db.collection("doctors")
                                     .document(user.email!!)
                                     .delete()
                                     .addOnSuccessListener {
-                                        Log.d(
-                                            "Firestore",
-                                            "¡El documento se ha eliminado con éxito!"
-                                        )
+                                        Log.d("Firestore", "¡El documento se ha eliminado con éxito!")
                                     }
                                     .addOnFailureListener { e ->
-                                        Log.w(
-                                            "Firestore",
-                                            "Se ha producido un error.",
-                                            e
-                                        )
+                                        Log.w("Firestore", "Se ha producido un error.", e)
                                     }
                                 // Redirigir al usuario a la siguiente actividad en caso de éxito
                                 val intent = Intent(this, MainActivity::class.java)
@@ -101,11 +91,7 @@ class DoctorProfileActivity : AppCompatActivity() {
                                 finish()
                             } else {
                                 // Error al eliminar un usuario
-                                Log.w(
-                                    "Firestore",
-                                    "Error al eliminar un usuario.",
-                                    task.exception
-                                )
+                                Log.w("Firestore", "Error al eliminar un usuario.", task.exception)
                             }
                         }
                 }
@@ -140,12 +126,12 @@ class DoctorProfileActivity : AppCompatActivity() {
                     txtDName.text = "Nombre: ${doctorData?.first}"
                     txtDSurname.text = "Apellido: ${doctorData?.last}"
                     txtDAge.text = "Edad: ${doctorData?.age}"
-                    txtDEmail.text = "Email: ${doctorData?.email}"
-                    txtDField.text = "Uzmanlık Alanı: ${doctorData?.field}"
+                    txtDEmail.text = "Correo: ${doctorData?.email}"
+                    txtDField.text = "Especialidad: ${doctorData?.field}"
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Error getting doctor data: ${e.message}", e)
+                Log.e("Firestore", "Error al obtener datos del doctor: ${e.message}", e)
             }
     }
 }

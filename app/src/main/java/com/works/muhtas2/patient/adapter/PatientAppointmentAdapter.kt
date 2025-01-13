@@ -10,11 +10,10 @@ import com.bumptech.glide.Glide
 import com.works.muhtas2.R
 import com.works.muhtas2.patient.models.PatientAppointmentData
 
-class PatientAppointmentAdapter(private val context: Activity, private val list:List<PatientAppointmentData>) : ArrayAdapter<PatientAppointmentData>(context,
-    R.layout.custom_appointment, list)
-{
+class PatientAppointmentAdapter(private val context: Activity, private val list: List<PatientAppointmentData>) : ArrayAdapter<PatientAppointmentData>(context,
+    R.layout.custom_appointment, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val rootView = context.layoutInflater.inflate(R.layout.custom_appointment,null,true)
+        val rootView = context.layoutInflater.inflate(R.layout.custom_appointment, null, true)
         val r_appName = rootView.findViewById<TextView>(R.id.r_appPName)
         val r_appDate = rootView.findViewById<TextView>(R.id.r_appPDate)
         val r_appHour = rootView.findViewById<TextView>(R.id.r_appPHour)
@@ -22,16 +21,14 @@ class PatientAppointmentAdapter(private val context: Activity, private val list:
         val r_appField = rootView.findViewById<TextView>(R.id.r_appPField)
         val r_appImg = rootView.findViewById<ImageView>(R.id.r_appPImg)
 
-        val appointment = list.get(position)
+        val appointment = list[position]
         r_appName.text = appointment.doctorName
-        r_appDate.text = "Tarih : " + appointment.date
-        r_appHour.text = "Saat : " + appointment.hour
-        r_appNote.text = "Not : " + appointment.note
+        r_appDate.text = "Fecha: " + appointment.date
+        r_appHour.text = "Hora: " + appointment.hour
+        r_appNote.text = "Nota: " + appointment.note
         r_appField.text = appointment.doctorField
         Glide.with(context).load(appointment.doctorImg).into(r_appImg)
 
-
         return rootView
     }
-
 }

@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.works.muhtas2.R
 
-
 class PatientLoginActivity : AppCompatActivity() {
     lateinit var btnRegister: Button
     lateinit var btnLogin: Button
@@ -28,26 +27,26 @@ class PatientLoginActivity : AppCompatActivity() {
 
         user = FirebaseAuth.getInstance()
         btnRegister.setOnClickListener {
-            var intent = Intent(this, PatientRegisterActivity::class.java)
+            val intent = Intent(this, PatientRegisterActivity::class.java)
             startActivity(intent)
         }
         btnLogin.setOnClickListener {
 
-            if (editTxtLEmail.text.toString() == "" || editTxtLPassword.text.toString() == "") {
+            if (editTxtLEmail.text.toString().isEmpty() || editTxtLPassword.text.toString().isEmpty()) {
                 Toast.makeText(
                     this,
-                    "Lütfen bilgileri eksiksiz şekilde doldurunuz",
+                    "Por favor, complete toda la información",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                val LoginEmail = editTxtLEmail.text.toString()
-                val LoginPassword = editTxtLPassword.text.toString()
-                user.signInWithEmailAndPassword(LoginEmail, LoginPassword)
+                val loginEmail = editTxtLEmail.text.toString()
+                val loginPassword = editTxtLPassword.text.toString()
+                user.signInWithEmailAndPassword(loginEmail, loginPassword)
                     .addOnCompleteListener(PatientLoginActivity()) { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(
                                 this,
-                                "Kullanıcı başarıyla giriş yaptı",
+                                "Usuario ha iniciado sesión con éxito",
                                 Toast.LENGTH_LONG
                             ).show()
                             val intent = Intent(this, PatientHomePageActivity::class.java)
@@ -59,6 +58,5 @@ class PatientLoginActivity : AppCompatActivity() {
                     }
             }
         }
-
     }
 }

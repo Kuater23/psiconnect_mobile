@@ -17,13 +17,12 @@ import com.works.muhtas2.doctor.models.DoctorData
 import com.works.muhtas2.patient.adapter.DoctorCustomAdapter
 import com.works.muhtas2.patient.services.DoctorService
 
-
 class PatientHomePageActivity : AppCompatActivity() {
     lateinit var listView: ListView
     lateinit var doctorService: DoctorService
 
     lateinit var userImage: String
-    lateinit var userName : String // Buradakiler AppointmentActivity'e göndermek için
+    lateinit var userName: String // Para enviar a AppointmentActivity
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -38,9 +37,9 @@ class PatientHomePageActivity : AppCompatActivity() {
         doctorService.getDoctors {
             val adapter = DoctorCustomAdapter(this, it)
             listView.adapter = adapter
-            //Log.d("doctors", it.toString())
         }
-        // Kullanıcının profil resmini Firestore'dan al
+
+        // Obtener la imagen de perfil del usuario desde Firestore
         val userEmail = auth.currentUser?.email
         if (userEmail != null) {
             db.collection("patients").document(userEmail).get()
@@ -49,33 +48,28 @@ class PatientHomePageActivity : AppCompatActivity() {
                         userImage = documentSnapshot.getString("image") ?: ""
                         val name = documentSnapshot.getString("first") ?: ""
                         val surname = documentSnapshot.getString("last")
-                        userName = name + " " + surname
+                        userName = "$name $surname"
                     }
                 }
         }
 
-
-        listView.setOnItemClickListener() { adapterView, view, i, l ->
+        listView.setOnItemClickListener { adapterView, _, i, _ ->
             val selectedItem = adapterView.getItemAtPosition(i) as DoctorData
             Log.d("info", selectedItem.toString())
 
-            val intent = Intent(this, AppointmentActivity::class.java)
-            intent.putExtra("name", selectedItem.first)
-            intent.putExtra("surname", selectedItem.last)
-            intent.putExtra("age", selectedItem.age)
-            intent.putExtra("field", selectedItem.field)
-            intent.putExtra("image", selectedItem.image)
-            intent.putExtra("email",selectedItem.email)
-            intent.putExtra("patientImage",userImage)
-            intent.putExtra("patientName",userName)
+            val intent = Intent(this, AppointmentActivity::class.java).apply {
+                putExtra("name", selectedItem.first)
+                putExtra("surname", selectedItem.last)
+                putExtra("age", selectedItem.age)
+                putExtra("field", selectedItem.field)
+                putExtra("image", selectedItem.image)
+                putExtra("email", selectedItem.email)
+                putExtra("patientImage", userImage)
+                putExtra("patientName", userName)
+            }
             startActivity(intent)
-
-            true
         }
-
-
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.patient_menu, menu)
@@ -85,32 +79,30 @@ class PatientHomePageActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.profile -> {
-                var intent = Intent(this, PatientProfileActivity::class.java)
+                val intent = Intent(this, PatientProfileActivity::class.java)
                 startActivity(intent)
             }
-
             R.id.news -> {
-                var intent = Intent(this, NewsActivity::class.java)
+                val intent = Intent(this, NewsActivity::class.java)
                 startActivity(intent)
             }
             R.id.logout -> {
                 AlertDialog.Builder(this).apply {
-                    setTitle("Hesaptan çıkış yap")
-                    setMessage("Çıkış yapmak istediğinize emin misiniz?")
-                    setPositiveButton("Evet") { _, _ ->
+                    setTitle("Cerrar sesión")
+                    setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                    setPositiveButton("Sí") { _, _ ->
                         FirebaseAuth.getInstance().signOut()
-                        val intent = Intent(applicationContext, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
                         startActivity(intent)
                         finish()
                     }
-                    setNegativeButton("Hayır", null)
-
+                    setNegativeButton("No", null)
                 }.create().show()
-
             }
             R.id.appointments -> {
-                val intent = Intent(applicationContext,PatientMyAppointmentsActivity::class.java)
+                val intent = Intent(applicationContext, PatientMyAppointmentsActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -119,7 +111,7 @@ class PatientHomePageActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Doktor listesini yeniden yükle
+        // Recargar la lista de doctores
         doctorService.getDoctors {
             val adapter = DoctorCustomAdapter(this, it)
             listView.adapter = adapter
