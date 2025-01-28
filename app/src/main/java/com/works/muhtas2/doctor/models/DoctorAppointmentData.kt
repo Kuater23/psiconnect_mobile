@@ -5,7 +5,6 @@ data class DoctorAppointmentData(
     val doctorEmail : String? = null,
     val patientEmail : String? = null,
     val patientName : String? = null,
-    val patientImg : String? = null,
     val note : String? = null,
     val date : String? = null,
     val hour : String? = null

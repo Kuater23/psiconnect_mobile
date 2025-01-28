@@ -137,17 +137,15 @@ class AppointmentActivity : AppCompatActivity() {
             if (patientEmail != null && appointmentDate.isNotEmpty() && appointmentHour.isNotEmpty()) {
                 val doctorFullname = "$doctorName $doctorSurname"
                 val appointmentInfo = AppointmentData(
-                    null,
-                    doctorEmail,
-                    patientEmail,
-                    patientFullName,
-                    patientImage,
-                    doctorFullname,
-                    doctorImage,
-                    doctorField,
-                    appointmentNote,
-                    appointmentDate,
-                    appointmentHour
+                    id = null,
+                    doctorEmail = doctorEmail,
+                    patientEmail = patientEmail,
+                    patientName = patientFullName,
+                    doctorName = doctorFullname,
+                    doctorField = doctorField,
+                    note = appointmentNote,
+                    date = appointmentDate,
+                    hour = appointmentHour
                 )
                 addAppointmentToFirestore(patientEmail, doctorEmail!!, appointmentInfo)
                 Toast.makeText(this, "Su cita ha sido creada con éxito", Toast.LENGTH_LONG).show()

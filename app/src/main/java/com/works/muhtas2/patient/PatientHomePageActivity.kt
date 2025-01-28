@@ -62,7 +62,6 @@ class PatientHomePageActivity : AppCompatActivity() {
                 putExtra("surname", selectedItem.last)
                 putExtra("age", selectedItem.age)
                 putExtra("field", selectedItem.field)
-                putExtra("image", selectedItem.image)
                 putExtra("email", selectedItem.email)
                 putExtra("patientImage", userImage)
                 putExtra("patientName", userName)
@@ -82,10 +81,7 @@ class PatientHomePageActivity : AppCompatActivity() {
                 val intent = Intent(this, PatientProfileActivity::class.java)
                 startActivity(intent)
             }
-            R.id.news -> {
-                val intent = Intent(this, NewsActivity::class.java)
-                startActivity(intent)
-            }
+
             R.id.logout -> {
                 AlertDialog.Builder(this).apply {
                     setTitle("Cerrar sesión")

@@ -87,10 +87,7 @@ class DoctorHomepageActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            R.id.doctor_news -> {
-                val intent = Intent(this, NewsActivity::class.java)
-                startActivity(intent)
-            }
+
             R.id.doctor_logout -> {
                 AlertDialog.Builder(this).apply {
                     setTitle("Cerrar sesión")

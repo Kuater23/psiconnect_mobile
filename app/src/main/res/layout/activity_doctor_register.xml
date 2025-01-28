@@ -7,17 +7,25 @@
     android:background="#F3E991"
     tools:context=".doctor.DoctorRegisterActivity">
 
-    <ImageButton
+    <Button
         android:id="@+id/btnRDocConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#00FFFFFF"
+        android:layout_marginTop="4dp"
+        android:text="Confirmar Registro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.743"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtRDoctorPassword"
-        app:srcCompat="@drawable/ic_login" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRDoctorID" />
+
+    <Button
+        android:id="@+id/btnGoogleSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Registrarse con Google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRDocConfirm" />
 
     <TextView
         android:id="@+id/textView2"
@@ -28,7 +36,7 @@
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/baloo"
         android:padding="5dp"
-        android:text="@string/register"
+        android:text="@string/registro"
         android:textColor="#000000"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,5 +154,43 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtRDoctorAge" />
+
+    <EditText
+        android:id="@+id/txtRDoctorLicense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="64dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:fontFamily="@font/baloo"
+        android:hint="License (MN-)"
+        android:inputType="text"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRDoctorPassword" />
+
+    <EditText
+        android:id="@+id/txtRDoctorID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="64dp"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:fontFamily="@font/baloo"
+        android:hint="Documento de identidad"
+        android:inputType="text"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRDoctorLicense" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

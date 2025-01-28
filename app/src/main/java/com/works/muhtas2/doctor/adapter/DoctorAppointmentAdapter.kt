@@ -28,7 +28,7 @@ class DoctorAppointmentAdapter(private val context: Activity, private val list:L
         r_appHour.text = "Hora : " + appointment.hour
         r_appNote.text = "Nota : " + appointment.note
 
-        Glide.with(context).load(appointment.patientImg).into(r_appImg)
+
 
 
         return rootView

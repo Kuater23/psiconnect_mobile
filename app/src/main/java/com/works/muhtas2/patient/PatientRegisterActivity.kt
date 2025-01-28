@@ -55,13 +55,7 @@ class PatientRegisterActivity : AppCompatActivity() {
             Log.d("email", ClientEmail)
             Log.d("password", ClientPassword)
 
-            if (!ClientEmail.contains("@patient")) {
-                Toast.makeText(
-                    this,
-                    "Ingrese una dirección de correo electrónico válida del paciente",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else if (ClientName.isNotEmpty() && ClientSurname.isNotEmpty() && ClientAge.isNotEmpty() && ClientEmail.isNotEmpty() && ClientPassword.isNotEmpty()) {
+            if (ClientName.isNotEmpty() && ClientSurname.isNotEmpty() && ClientAge.isNotEmpty() && ClientEmail.isNotEmpty() && ClientPassword.isNotEmpty()) {
                 auth.createUserWithEmailAndPassword(ClientEmail, ClientPassword)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {

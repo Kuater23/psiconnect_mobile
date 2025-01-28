@@ -58,7 +58,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                     edtDSurname.setText(doctorData?.last)
                     edtDAge.setText(doctorData?.age)
                     // Configurar el spinner para la especialidad
-                    val specialties = resources.getStringArray(R.array.doctor_specialties)
+                    val specialties = resources.getStringArray(R.array.especialidades)
                     val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, specialties)
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerField.adapter = adapter
@@ -211,7 +211,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                     field = field,
                     email = email,
                     password = passwordToUpdate,
-                    image = image
+
                 )
 
                 db.collection("doctors")

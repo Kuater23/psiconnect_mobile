@@ -42,7 +42,7 @@ class DoctorProfileActivity : AppCompatActivity() {
         imgDoctorProfile = findViewById(R.id.imgDoctorProfilePicture)
 
         if (user != null) {
-            db.collection("doctors").document(user.email!!)
+            db.collection("doctors").document(user.uid)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -53,7 +53,7 @@ class DoctorProfileActivity : AppCompatActivity() {
                             txtDAge.text = "Edad: " + doctorData.age ?: "N/A"
                             txtDEmail.text = "Correo: " + doctorData.email ?: "N/A"
                             txtDField.text = "Especialidad: " + doctorData.field ?: "N/A"
-                            Glide.with(this).load(doctorData.image).into(imgDoctorProfile)
+
                         }
                     } else {
                         Log.d("DocumentSnapshot", "No existe tal documento")

@@ -8,5 +8,6 @@ data class DoctorData(
     var field : String? = null,
     var email: String? = null ,
     var password: String? = null,
-    var image: String? = null,
+    var licence: String? = null,
+    var id: String? = null
 )
