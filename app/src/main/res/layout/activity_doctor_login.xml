@@ -62,8 +62,8 @@
 
     <Button
         android:id="@+id/btnDoctorLogin"
-        android:layout_width="151dp"
-        android:layout_height="59dp"
+        android:layout_width="130dp"
+        android:layout_height="42dp"
         android:layout_marginStart="180dp"
         android:layout_marginTop="96dp"
         android:layout_marginEnd="30dp"
@@ -82,7 +82,7 @@
         android:fontFamily="@font/baloo"
         android:padding="5dp"
         android:text="@string/header"
-        android:textColor="#FF7043"
+        android:textColor="#2F4358"
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

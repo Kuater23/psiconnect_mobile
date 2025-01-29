@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mor">
+    android:background="@color/grey">
 
     <ImageView
         android:id="@+id/r_appDImg"
@@ -32,7 +32,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/baloo"
             android:text="Nombre del paciente"
-            android:textColor="@color/koyu_yesil"
+            android:textColor="@color/verde_oscuro"
             android:textSize="18sp" />
 
         <TextView

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mor">
+    android:background="@color/celeste">
 
     <ImageView
         android:id="@+id/r_appPImg"
@@ -33,7 +33,7 @@
             android:layout_marginTop="3dp"
             android:fontFamily="@font/baloo"
             android:text="Nombre del profesional"
-            android:textColor="@color/koyu_yesil"
+            android:textColor="@color/verde_oscuro"
             android:textSize="18sp" />
 
         <TextView

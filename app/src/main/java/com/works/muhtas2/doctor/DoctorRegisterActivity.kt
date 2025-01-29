@@ -11,16 +11,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.works.muhtas2.R
 import com.works.muhtas2.doctor.models.DoctorData
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DoctorRegisterActivity : AppCompatActivity() {
     lateinit var spinnerSpecialties: Spinner
     lateinit var txtRDoctorName: EditText
     lateinit var txtRDoctorSurname: EditText
-    lateinit var txtRDoctorAge: EditText
+    lateinit var txtRDoctorBirthdate: EditText
     lateinit var txtRDoctorEmail: EditText
     lateinit var txtRDoctorPassword: EditText
     lateinit var txtRDoctorLicense: EditText
     lateinit var txtRDoctorID: EditText
+    lateinit var txtRDoctorPhone: EditText
     lateinit var btnRDocConfirm: Button
     lateinit var btnGoogleSignIn: Button
 
@@ -35,6 +38,7 @@ class DoctorRegisterActivity : AppCompatActivity() {
     lateinit var DoctorPassword: String
     lateinit var DoctorLicense: String
     lateinit var DoctorID: String
+    lateinit var DoctorPhone: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +49,12 @@ class DoctorRegisterActivity : AppCompatActivity() {
 
         txtRDoctorName = findViewById(R.id.txtRDoctorName)
         txtRDoctorSurname = findViewById(R.id.txtRDoctorSurname)
-        txtRDoctorAge = findViewById(R.id.txtRDoctorAge)
+        txtRDoctorBirthdate = findViewById(R.id.txtRDoctorBirthdate)
         txtRDoctorEmail = findViewById(R.id.txtRDoctorEmail)
         txtRDoctorPassword = findViewById(R.id.txtRDoctorPassword)
         txtRDoctorLicense = findViewById(R.id.txtRDoctorLicense)
         txtRDoctorID = findViewById(R.id.txtRDoctorID)
+        txtRDoctorPhone = findViewById(R.id.txtRDoctorPhone)
         btnRDocConfirm = findViewById(R.id.btnRDocConfirm)
         btnGoogleSignIn = findViewById(R.id.btnGoogleSignIn)
         spinnerSpecialties = findViewById(R.id.spinnerField)
@@ -69,20 +74,61 @@ class DoctorRegisterActivity : AppCompatActivity() {
                 }
             }
 
+            override fun afterTextChanged(s: Editable?) {
+                val input = s.toString().replace("MN-", "")
+                if (input.length > 7) {
+                    txtRDoctorLicense.setText("MN-" + input.substring(0, 7))
+                    txtRDoctorLicense.setSelection(txtRDoctorLicense.text.length)
+                }
+            }
+        })
+
+        txtRDoctorBirthdate.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val dateFormat = "##/##/####"
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUpdating) {
+                    isUpdating = false
+                    return
+                }
+
+                var input = s.toString().replace("[^\\d]".toRegex(), "")
+                val length = input.length
+
+                if (length > 2) {
+                    input = input.substring(0, 2) + "/" + input.substring(2)
+                }
+                if (length > 4) {
+                    input = input.substring(0, 5) + "/" + input.substring(5)
+                }
+                if (length > 8) {
+                    input = input.substring(0, 10)
+                }
+
+                isUpdating = true
+                txtRDoctorBirthdate.setText(input)
+                txtRDoctorBirthdate.setSelection(input.length)
+            }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
         btnRDocConfirm.setOnClickListener {
             DoctorName = txtRDoctorName.text.toString()
             DoctorSurname = txtRDoctorSurname.text.toString()
-            DoctorAge = txtRDoctorAge.text.toString()
+            val birthdateStr = txtRDoctorBirthdate.text.toString()
+            DoctorAge = calculateAge(birthdateStr).toString()
             DoctorField = spinnerSpecialties.selectedItem.toString()
             DoctorEmail = txtRDoctorEmail.text.toString()
             DoctorPassword = txtRDoctorPassword.text.toString()
             DoctorLicense = txtRDoctorLicense.text.toString()
             DoctorID = txtRDoctorID.text.toString()
+            DoctorPhone = txtRDoctorPhone.text.toString()
 
-            if (DoctorName.isNotEmpty() && DoctorSurname.isNotEmpty() && DoctorAge.isNotEmpty() && DoctorField.isNotEmpty() && DoctorEmail.isNotEmpty() && DoctorPassword.isNotEmpty() && DoctorLicense.isNotEmpty() && DoctorID.isNotEmpty()) {
+            if (DoctorName.isNotEmpty() && DoctorSurname.isNotEmpty() && birthdateStr.isNotEmpty() && DoctorField.isNotEmpty() && DoctorEmail.isNotEmpty() && DoctorPassword.isNotEmpty() && DoctorLicense.isNotEmpty() && DoctorID.isNotEmpty() && DoctorPhone.isNotEmpty()) {
                 auth.createUserWithEmailAndPassword(DoctorEmail, DoctorPassword)
                     .addOnCompleteListener(DoctorRegisterActivity()) { task ->
                         if (task.isSuccessful) {
@@ -97,7 +143,8 @@ class DoctorRegisterActivity : AppCompatActivity() {
                                 DoctorEmail,
                                 DoctorPassword,
                                 DoctorLicense,
-                                DoctorID
+                                DoctorID,
+                                DoctorPhone
                             )
                             db.collection("doctors").document(user.uid).set(doctorData)
                                 .addOnSuccessListener {
@@ -122,5 +169,19 @@ class DoctorRegisterActivity : AppCompatActivity() {
         btnGoogleSignIn.setOnClickListener {
             // Implementar lógica de registro con Google
         }
+    }
+
+    private fun calculateAge(birthdate: String): Int {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val birthDate = sdf.parse(birthdate)
+        val today = Calendar.getInstance()
+        val birthDay = Calendar.getInstance()
+        birthDay.time = birthDate
+
+        var age = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+        if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR)) {
+            age--
+        }
+        return age
     }
 }

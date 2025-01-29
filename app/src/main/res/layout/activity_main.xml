@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B2DFDB"
+    android:background="#E3F2FD"
     tools:context=".MainActivity">
 
     <ImageView
@@ -48,7 +48,7 @@
         android:padding="8dp"
         android:text="Psi Connect"
         android:textAlignment="center"
-        android:textColor="#009688"
+        android:textColor="#2F4358"
         android:textSize="48sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/patientButton"
@@ -64,7 +64,7 @@
         android:padding="5dp"
         android:text="@string/doctor"
         android:textAlignment="center"
-        android:textColor="#009688"
+        android:textColor="#2F4358"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/doctorButton"
         app:layout_constraintStart_toStartOf="@+id/doctorButton"
@@ -79,7 +79,7 @@
         android:padding="5dp"
         android:text="@string/patient"
         android:textAlignment="center"
-        android:textColor="#009688"
+        android:textColor="#2F4358"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/patientButton"
         app:layout_constraintStart_toStartOf="@+id/patientButton"

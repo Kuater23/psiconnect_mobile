@@ -5,9 +5,10 @@ data class DoctorData(
     var first: String? = null,
     var last: String? = null,
     var age: String? = null,
-    var field : String? = null,
-    var email: String? = null ,
+    var field: String? = null,
+    var email: String? = null,
     var password: String? = null,
     var licence: String? = null,
-    var id: String? = null
+    var id: String? = null,
+    var phone: String? = null
 )

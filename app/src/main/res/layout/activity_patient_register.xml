@@ -4,41 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3E991"
+    android:background="#E3F2FD"
     tools:context=".patient.PatientRegisterActivity">
-
-    <ImageButton
-        android:id="@+id/btnRDocConfirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#00FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.743"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtClientPassword"
-        app:srcCompat="@drawable/ic_login" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/baloo"
         android:padding="5dp"
         android:text="@string/registro"
         android:textColor="#000000"
-        android:textSize="60sp"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/txtClientName"
+        android:id="@+id/txtRPatientName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -55,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/txtClientSurname"
+        android:id="@+id/txtRPatientSurname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -69,10 +55,10 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtClientName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRPatientName" />
 
     <EditText
-        android:id="@+id/txtClientEmail"
+        android:id="@+id/txtRPatientEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -87,10 +73,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtClientAge" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRPatientBirthdate" />
 
     <EditText
-        android:id="@+id/txtClientPassword"
+        android:id="@+id/txtRPatientPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -105,23 +91,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtClientEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRPatientEmail" />
 
     <EditText
-        android:id="@+id/txtClientAge"
+        android:id="@+id/txtRPatientBirthdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="#FFFFFF"
         android:ems="10"
         android:fontFamily="@font/baloo"
-        android:hint="Edad"
-        android:inputType="number"
+        android:hint="Fecha de Nacimiento"
+        android:inputType="none"
         android:padding="5dp"
         android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtClientSurname" />
+        app:layout_constraintTop_toBottomOf="@+id/txtRPatientSurname" />
+
+    <Button
+        android:id="@+id/btnRPatientConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="196dp"
+        android:text="Confirmar Registro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRPatientBirthdate" />
+
+    <Button
+        android:id="@+id/btnGoogleSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Registrarse con Google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRPatientConfirm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,13 +38,7 @@ class DoctorLoginActivity : AppCompatActivity() {
                     "Por favor, rellene la información en su totalidad",
                     Toast.LENGTH_LONG
                 ).show()
-            } else if (!editTxtDoctorLEmail.text.toString().contains("@doctor")) {
-                Toast.makeText(
-                    this,
-                    "Por favor, ingrese una dirección de correo electrónico de médico válida",
-                    Toast.LENGTH_LONG
-                ).show()
-            }else {
+            } else {
                 val LoginEmail = editTxtDoctorLEmail.text.toString()
                 val LoginPassword = editTxtDoctorLPassword.text.toString()
                 user.signInWithEmailAndPassword(LoginEmail, LoginPassword)
