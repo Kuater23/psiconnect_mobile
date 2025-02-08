@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.works.muhtas2.MainActivity
-import com.works.muhtas2.NewsActivity
 import com.works.muhtas2.R
 import com.works.muhtas2.doctor.models.DoctorData
 import com.works.muhtas2.patient.adapter.DoctorCustomAdapter
@@ -21,8 +20,7 @@ class PatientHomePageActivity : AppCompatActivity() {
     lateinit var listView: ListView
     lateinit var doctorService: DoctorService
 
-    lateinit var userImage: String
-    lateinit var userName: String // Para enviar a AppointmentActivity
+    var userName: String = "Usuario" // Valor predeterminado
 
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -45,7 +43,6 @@ class PatientHomePageActivity : AppCompatActivity() {
             db.collection("patients").document(userEmail).get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
-                        userImage = documentSnapshot.getString("image") ?: ""
                         val name = documentSnapshot.getString("first") ?: ""
                         val surname = documentSnapshot.getString("last")
                         userName = "$name $surname"
@@ -63,7 +60,6 @@ class PatientHomePageActivity : AppCompatActivity() {
                 putExtra("age", selectedItem.age)
                 putExtra("field", selectedItem.field)
                 putExtra("email", selectedItem.email)
-                putExtra("patientImage", userImage)
                 putExtra("patientName", userName)
             }
             startActivity(intent)

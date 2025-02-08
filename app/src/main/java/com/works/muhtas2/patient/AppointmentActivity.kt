@@ -32,7 +32,6 @@ class AppointmentActivity : AppCompatActivity() {
     lateinit var editTxtAppNote: EditText
     var Date = ""
     var selectedHour = ""
-    lateinit var ImgApp: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +44,6 @@ class AppointmentActivity : AppCompatActivity() {
         txtAppHour = findViewById(R.id.txtAppHour)
         btnSelectHour = findViewById(R.id.btnSelectHour)
         btnSelectDate = findViewById(R.id.btnSelectDate)
-        ImgApp = findViewById(R.id.ImgApp)
         btnMakeApp = findViewById(R.id.btnMakeApp)
         editTxtAppNote = findViewById(R.id.editTxtAppNote)
 
@@ -56,12 +54,13 @@ class AppointmentActivity : AppCompatActivity() {
         val doctorImage = intent.getStringExtra("image")
         val patientImage = intent.getStringExtra("patientImage")
         val patientFullName = intent.getStringExtra("patientName")
+        val doctorEmail = intent.getStringExtra("email")
 
-        txtAppName.text = "Nombre: " + doctorName
-        txtAppSurname.text = "Apellido: " + doctorSurname
-        txtAppAge.text = "Edad: " + doctorAge
-        txtAppField.text = "Especialidad: " + doctorField
-        Glide.with(this).load(doctorImage).into(ImgApp)
+        txtAppName.text = "Nombre: $doctorName"
+        txtAppSurname.text = "Apellido: $doctorSurname"
+        txtAppAge.text = "Edad: $doctorAge"
+        txtAppField.text = "Especialidad: $doctorField"
+        Glide.with(this).load(doctorImage).into(findViewById(R.id.ImgApp))
 
         val currentDate = Calendar.getInstance()
         val year = currentDate.get(Calendar.YEAR)
@@ -114,7 +113,7 @@ class AppointmentActivity : AppCompatActivity() {
                     Toast.makeText(this@AppointmentActivity, "Por favor, seleccione una hora dentro del horario laboral (9:00 - 17:00)", Toast.LENGTH_LONG).show()
                 } else {
                     selectedHour = String.format("%d:%d", hour, roundedMinute)
-                    txtAppHour.text = "Fecha: " + Date + "\nHora: " + String.format("%d:%d", hour, roundedMinute)
+                    txtAppHour.text = "Fecha: $Date\nHora: ${String.format("%d:%d", hour, roundedMinute)}"
                 }
             }
         }, hour, minute, true)
@@ -129,7 +128,6 @@ class AppointmentActivity : AppCompatActivity() {
 
         btnMakeApp.setOnClickListener {
             val patientEmail = FirebaseAuth.getInstance().currentUser?.email
-            val doctorEmail = intent.getStringExtra("email")
             val appointmentNote = editTxtAppNote.text.toString()
             val appointmentDate = Date
             val appointmentHour = selectedHour
