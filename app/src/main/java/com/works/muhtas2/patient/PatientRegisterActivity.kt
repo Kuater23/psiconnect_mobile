@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
@@ -44,6 +45,16 @@ class PatientRegisterActivity : AppCompatActivity() {
         txtRPatientEmail = findViewById(R.id.txtRPatientEmail)
         txtRPatientPassword = findViewById(R.id.txtRPatientPassword)
         btnRPatientConfirm = findViewById(R.id.btnRPatientConfirm)
+
+        // Establecer filtro para el campo de contraseña
+        val hexPattern = "[0-9A-Fa-f!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]+"
+        txtRPatientPassword.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            if (source.matches(Regex(hexPattern))) {
+                source
+            } else {
+                ""
+            }
+        })
 
         txtRPatientBirthdate.addTextChangedListener(object : TextWatcher {
             private var current = ""
@@ -100,7 +111,7 @@ class PatientRegisterActivity : AppCompatActivity() {
             PatientEmail = txtRPatientEmail.text.toString()
             PatientPassword = txtRPatientPassword.text.toString()
 
-            if (PatientName.isNotEmpty() && PatientSurname.isNotEmpty() && birthdateStr.isNotEmpty() && PatientEmail.isNotEmpty() && PatientPassword.isNotEmpty()) {
+            if (PatientName.isNotEmpty() && PatientSurname.isNotEmpty() && birthdateStr.isNotEmpty() && PatientEmail.isNotEmpty() && PatientPassword.isNotEmpty() && PatientPassword.length >= 6) {
                 auth.createUserWithEmailAndPassword(PatientEmail, PatientPassword)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
@@ -127,7 +138,7 @@ class PatientRegisterActivity : AppCompatActivity() {
                         }
                     }
             } else {
-                Toast.makeText(this, "No introduzca información incompleta", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "No introduzca información incompleta o contraseña menor a 6 caracteres", Toast.LENGTH_LONG).show()
             }
         }
     }
