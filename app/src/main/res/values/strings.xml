@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Psi Connect</string>
+    <string name="app_name">PsiConnect</string>
     <string name="email">Mail</string>
     <string name="password">Contraseña</string>
-    <string name="header">Psi Connect</string>
+    <string name="header">PsiConnect</string>
     <string name="registro">Registrarse</string>
     <string name="login">Iniciar sesion</string>
 
@@ -10,7 +10,7 @@
     <string name="cerrar_sesion">Cerrar sesion</string>
     <!--<string name="news">Haberler</string>-->
 
-    <string name="turnos">Turno Al</string>
+    <string name="turnos">Turno</string>
     <string name="cancelar">Cancelar</string>
 
     <string name="doctor">Profesional</string>

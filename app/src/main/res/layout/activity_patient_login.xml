@@ -38,7 +38,7 @@
         android:ems="10"
         android:fontFamily="@font/baloo"
         android:hint="@string/password"
-        android:inputType="textPassword"
+        android:inputType="number"
         android:padding="5dp"
         android:textColor="#000000"
         android:textSize="20sp"
@@ -52,8 +52,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="200dp"
+        android:layout_marginTop="125dp"
+        android:layout_marginEnd="10dp"
         android:text="@string/registro"
         app:icon="@drawable/ic_register"
         app:layout_constraintEnd_toEndOf="@+id/editTxtDoctorLPassword"
@@ -64,14 +64,13 @@
         android:id="@+id/btnDoctorLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="10dp"
         android:text="@string/login"
         app:icon="@drawable/ic_login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/editTxtDoctorLPassword"
+        app:layout_constraintEnd_toEndOf="@+id/editTxtDoctorLPassword"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTxtDoctorLPassword" />
 
     <TextView
@@ -82,10 +81,16 @@
         android:fontFamily="@font/baloo"
         android:padding="5dp"
         android:text="@string/header"
-        android:textColor="#FF7043"
+        android:textColor="#2F4358"
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btnDoctorLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
