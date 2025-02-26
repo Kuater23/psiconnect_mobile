@@ -28,7 +28,7 @@ class WebNewsService {
             }
             if (arr.size >= 14)
             {
-                break // İlk 15 haberi alıyorum diğer türlü çok uzun olucak
+                break // Tomar las primeras 15 noticias.
             }
 
         }
