@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtPName" />
 
     <TextView
-        android:id="@+id/txtPAge"
+        android:id="@+id/txtPDob"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -87,7 +87,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPAge" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPDob" />
 
     <Button
         android:id="@+id/btnDeleteAccount"

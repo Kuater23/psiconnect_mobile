@@ -6,16 +6,14 @@
     android:layout_height="match_parent"
     android:background="@color/verde_oscuro"
     android:padding="5dp"
-    tools:context=".patient.AppointmentActivity"
-    tools:layout_editor_absoluteX="1dp"
-    tools:layout_editor_absoluteY="1dp">
+    tools:context=".patient.AppointmentActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/verde_oscuro">
 
-        <!-- ImageView -->
+        <!-- Imagen del Doctor -->
         <ImageView
             android:id="@+id/ImgApp"
             android:layout_width="0dp"
@@ -29,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <!-- Name TextView -->
+        <!-- Nombre del Doctor -->
         <TextView
             android:id="@+id/txtAppName"
             android:layout_width="0dp"
@@ -40,20 +38,20 @@
             android:background="#FFFFFF"
             android:fontFamily="@font/baloo"
             android:padding="10dp"
-            android:text= "Nombre"
+            android:text="Nombre"
             android:textColor="#000000"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ImgApp" />
+            app:layout_constraintTop_toBottomOf="@id/ImgApp" />
 
-        <!-- Surname TextView -->
+        <!-- Apellido del Doctor -->
         <TextView
             android:id="@+id/txtAppSurname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/baloo"
@@ -63,56 +61,53 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAppName" />
+            app:layout_constraintTop_toBottomOf="@id/txtAppName" />
 
-        <!-- Age TextView -->
+        <!-- Fecha de Nacimiento del Doctor -->
         <TextView
-            android:id="@+id/txtAppAge"
+            android:id="@+id/txtAppDob"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/baloo"
             android:padding="10dp"
-            android:text="Edad"
+            android:text="Fecha de Nacimiento"
             android:textColor="#000000"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAppSurname" />
+            app:layout_constraintTop_toBottomOf="@id/txtAppSurname" />
 
-        <!-- Field TextView -->
+        <!-- Especialidad del Doctor -->
         <TextView
-            android:id="@+id/txtAppField"
+            android:id="@+id/txtAppSpeciality"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/baloo"
             android:padding="10dp"
-            android:text="Area"
+            android:text="Especialidad"
             android:textColor="#000000"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAppAge" />
+            app:layout_constraintTop_toBottomOf="@id/txtAppDob" />
 
+        <!-- Nota de la Cita -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="0dp"
             android:layout_height="150dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/txtAppHour"
+            android:layout_margin="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtAppField"
+            app:layout_constraintTop_toBottomOf="@id/txtAppSpeciality"
             app:strokeColor="#000000"
             app:strokeWidth="2dp">
 
@@ -120,24 +115,20 @@
                 android:id="@+id/editTxtAppNote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:width="50dp"
-                android:ems="10"
+                android:hint="Ingrese una nota..."
                 android:fontFamily="@font/baloo"
                 android:gravity="top"
-                android:hint="Ingrese una nota..."
                 android:inputType="textMultiLine"
                 android:maxLines="5"
-                android:singleLine="false"
-                android:textColor="#000000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:textColor="#000000"/>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Hora Seleccionada -->
         <TextView
             android:id="@+id/txtAppHour"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:background="#FFFFFF"
             android:fontFamily="@font/baloo"
             android:padding="5dp"
@@ -145,41 +136,43 @@
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/btnSelectHour"
-            app:layout_constraintEnd_toEndOf="@+id/btnSelectDate"
-            app:layout_constraintStart_toStartOf="@+id/btnSelectHour" />
+            app:layout_constraintTop_toBottomOf="@id/materialCardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-        <Button
-            android:id="@+id/btnMakeApp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:fontFamily="@font/baloo"
-            android:text="Solicitar cita"
-            app:icon="@drawable/ic_savebutton"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/materialCardView" />
-
+        <!-- Botón para Seleccionar Hora -->
         <ImageButton
             android:id="@+id/btnSelectHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:background="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/materialCardView"
-            app:srcCompat="@drawable/ic_appointment_hour" />
+            android:layout_margin="32dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@id/txtAppHour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_appointment_hour"/>
 
+        <!-- Botón para Seleccionar Fecha -->
         <ImageButton
             android:id="@+id/btnSelectDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:background="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="@+id/btnSelectHour"
-            app:layout_constraintStart_toEndOf="@+id/btnSelectHour"
-            app:srcCompat="@drawable/ic_appointment_date" />
+            android:layout_margin="32dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@id/txtAppHour"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_appointment_date"/>
 
-
+        <!-- Botón para Solicitar Cita -->
+        <Button
+            android:id="@+id/btnMakeApp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:text="Solicitar cita"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/btnSelectHour"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_savebutton"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

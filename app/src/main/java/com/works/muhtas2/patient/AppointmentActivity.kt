@@ -3,16 +3,10 @@ package com.works.muhtas2.patient
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.TimePicker
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,17 +15,18 @@ import com.works.muhtas2.doctor.models.AppointmentData
 import java.util.Calendar
 
 class AppointmentActivity : AppCompatActivity() {
-    lateinit var txtAppName: TextView
-    lateinit var txtAppSurname: TextView
-    lateinit var txtAppAge: TextView
-    lateinit var txtAppField: TextView
-    lateinit var txtAppHour: TextView
-    lateinit var btnSelectHour: ImageButton
-    lateinit var btnSelectDate: ImageButton
-    lateinit var btnMakeApp: Button
-    lateinit var editTxtAppNote: EditText
-    var Date = ""
-    var selectedHour = ""
+    private lateinit var txtAppName: TextView
+    private lateinit var txtAppSurname: TextView
+    private lateinit var txtAppDob: TextView
+    private lateinit var txtAppSpeciality: TextView
+    private lateinit var txtAppHour: TextView
+    private lateinit var btnSelectHour: ImageButton
+    private lateinit var btnSelectDate: ImageButton
+    private lateinit var btnMakeApp: Button
+    private lateinit var editTxtAppNote: EditText
+
+    private var selectedDate = ""
+    private var selectedHour = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,29 +34,37 @@ class AppointmentActivity : AppCompatActivity() {
 
         txtAppName = findViewById(R.id.txtAppName)
         txtAppSurname = findViewById(R.id.txtAppSurname)
-        txtAppAge = findViewById(R.id.txtAppAge)
-        txtAppField = findViewById(R.id.txtAppField)
+        txtAppDob = findViewById(R.id.txtAppDob)
+        txtAppSpeciality = findViewById(R.id.txtAppSpeciality)
         txtAppHour = findViewById(R.id.txtAppHour)
         btnSelectHour = findViewById(R.id.btnSelectHour)
         btnSelectDate = findViewById(R.id.btnSelectDate)
         btnMakeApp = findViewById(R.id.btnMakeApp)
         editTxtAppNote = findViewById(R.id.editTxtAppNote)
 
-        val doctorName = intent.getStringExtra("name")
-        val doctorSurname = intent.getStringExtra("surname")
-        val doctorAge = intent.getStringExtra("age")
-        val doctorField = intent.getStringExtra("field")
-        val doctorImage = intent.getStringExtra("image")
-        val patientImage = intent.getStringExtra("patientImage")
-        val patientFullName = intent.getStringExtra("patientName")
-        val doctorEmail = intent.getStringExtra("email")
+        val doctorFirstName = intent.getStringExtra("firstName")
+        val doctorLastName = intent.getStringExtra("lastName")
+        val doctorDob = intent.getStringExtra("dob")
+        val doctorSpeciality = intent.getStringExtra("speciality")
+        val doctorImage = intent.getStringExtra("doctorImage")
+        val doctorUid = intent.getStringExtra("doctorUid")
 
-        txtAppName.text = "Nombre: $doctorName"
-        txtAppSurname.text = "Apellido: $doctorSurname"
-        txtAppAge.text = "Edad: $doctorAge"
-        txtAppField.text = "Especialidad: $doctorField"
+        txtAppName.text = "Nombre: $doctorFirstName"
+        txtAppSurname.text = "Apellido: $doctorLastName"
+        txtAppDob.text = "Fecha de Nacimiento: $doctorDob"
+        txtAppSpeciality.text = "Especialidad: $doctorSpeciality"
+
         Glide.with(this).load(doctorImage).into(findViewById(R.id.ImgApp))
 
+        setupDatePicker()
+        setupTimePicker()
+
+        btnMakeApp.setOnClickListener {
+            createAppointment(doctorUid)
+        }
+    }
+
+    private fun setupDatePicker() {
         val currentDate = Calendar.getInstance()
         val year = currentDate.get(Calendar.YEAR)
         val month = currentDate.get(Calendar.MONTH)
@@ -69,19 +72,15 @@ class AppointmentActivity : AppCompatActivity() {
 
         val datePickerDialog = DatePickerDialog(
             this,
-            DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(selectedYear, selectedMonth, selectedDayOfMonth)
-                val dayOfWeek = selectedDate.get(Calendar.DAY_OF_WEEK)
+            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+                val selectedDateCalendar = Calendar.getInstance()
+                selectedDateCalendar.set(selectedYear, selectedMonth, selectedDayOfMonth)
+                val dayOfWeek = selectedDateCalendar.get(Calendar.DAY_OF_WEEK)
 
                 if (dayOfWeek == Calendar.SUNDAY) {
-                    Toast.makeText(this, "No hay horario de trabajo los domingos, no se puede seleccionar", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "No hay horario de trabajo los domingos", Toast.LENGTH_LONG).show()
                 } else {
-                    var monthStr = "${selectedMonth + 1}"
-                    if (selectedMonth + 1 < 10) {
-                        monthStr = "0${selectedMonth + 1}"
-                    }
-                    Date = "$selectedDayOfMonth.$monthStr.$selectedYear"
+                    selectedDate = String.format("%02d/%02d/%d", selectedDayOfMonth, selectedMonth + 1, selectedYear)
                 }
             },
             year,
@@ -90,7 +89,6 @@ class AppointmentActivity : AppCompatActivity() {
         )
 
         val minDate = Calendar.getInstance()
-        minDate.add(Calendar.DAY_OF_MONTH, 0)
         datePickerDialog.datePicker.minDate = minDate.timeInMillis
 
         val maxDate = Calendar.getInstance()
@@ -100,86 +98,75 @@ class AppointmentActivity : AppCompatActivity() {
         btnSelectDate.setOnClickListener {
             datePickerDialog.show()
         }
+    }
 
-        val mTimePicker: TimePickerDialog
-        val mCurrentTime = Calendar.getInstance()
-        val hour = mCurrentTime.get(Calendar.HOUR_OF_DAY)
-        val minute = mCurrentTime.get(Calendar.MINUTE)
+    private fun setupTimePicker() {
+        val currentTime = Calendar.getInstance()
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = currentTime.get(Calendar.MINUTE)
 
-        mTimePicker = TimePickerDialog(this, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(p0: TimePicker?, hour: Int, minute: Int) {
-                val roundedMinute = (Math.round(minute.toFloat() / 15) * 15) % 60
-                if (hour < 9 || hour >= 17) {
-                    Toast.makeText(this@AppointmentActivity, "Por favor, seleccione una hora dentro del horario laboral (9:00 - 17:00)", Toast.LENGTH_LONG).show()
+        val timePickerDialog = TimePickerDialog(
+            this,
+            { _, selectedHourOfDay, selectedMinute ->
+                val roundedMinute = (selectedMinute / 15) * 15
+                if (selectedHourOfDay < 9 || selectedHourOfDay >= 17) {
+                    Toast.makeText(this, "Seleccione una hora entre 9:00 y 17:00", Toast.LENGTH_LONG).show()
                 } else {
-                    selectedHour = String.format("%d:%d", hour, roundedMinute)
-                    txtAppHour.text = "Fecha: $Date\nHora: ${String.format("%d:%d", hour, roundedMinute)}"
+                    selectedHour = String.format("%02d:%02d", selectedHourOfDay, roundedMinute)
+                    txtAppHour.text = "Fecha: $selectedDate\nHora: $selectedHour"
                 }
-            }
-        }, hour, minute, true)
+            },
+            hour,
+            minute,
+            true
+        )
 
         btnSelectHour.setOnClickListener {
-            if (Date.isEmpty()) {
-                Toast.makeText(this, "Por favor, seleccione una fecha primero", Toast.LENGTH_LONG).show()
+            if (selectedDate.isEmpty()) {
+                Toast.makeText(this, "Seleccione una fecha primero", Toast.LENGTH_LONG).show()
             } else {
-                mTimePicker.show()
-            }
-        }
-
-        btnMakeApp.setOnClickListener {
-            val patientEmail = FirebaseAuth.getInstance().currentUser?.email
-            val appointmentNote = editTxtAppNote.text.toString()
-            val appointmentDate = Date
-            val appointmentHour = selectedHour
-
-            if (patientEmail != null && appointmentDate.isNotEmpty() && appointmentHour.isNotEmpty()) {
-                val doctorFullname = "$doctorName $doctorSurname"
-                val appointmentInfo = AppointmentData(
-                    id = null,
-                    doctorEmail = doctorEmail,
-                    patientEmail = patientEmail,
-                    patientName = patientFullName,
-                    doctorName = doctorFullname,
-                    doctorField = doctorField,
-                    note = appointmentNote,
-                    date = appointmentDate,
-                    hour = appointmentHour
-                )
-                addAppointmentToFirestore(patientEmail, doctorEmail!!, appointmentInfo)
-                Toast.makeText(this, "Su cita ha sido creada con éxito", Toast.LENGTH_LONG).show()
-                val intent = Intent(this, PatientHomePageActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "Por favor, complete toda la información requerida", Toast.LENGTH_LONG).show()
+                timePickerDialog.show()
             }
         }
     }
 
-    fun addAppointmentToFirestore(
-        patientEmail: String,
-        doctorEmail: String,
-        appointment: AppointmentData
-    ) {
+    private fun createAppointment(doctorUid: String?) {
+        val patientUid = FirebaseAuth.getInstance().currentUser?.uid
+        val appointmentNote = editTxtAppNote.text.toString()
+
+        if (patientUid != null && doctorUid != null && selectedDate.isNotEmpty() && selectedHour.isNotEmpty()) {
+            val appointmentInfo = AppointmentData(
+                id = null,
+                doctorUid = doctorUid,
+                patientUid = patientUid,
+                note = appointmentNote,
+                date = selectedDate,
+                hour = selectedHour
+            )
+            addAppointmentToFirestore(patientUid, doctorUid, appointmentInfo)
+            Toast.makeText(this, "Cita creada con éxito", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, PatientHomePageActivity::class.java))
+            finish()
+        } else {
+            Toast.makeText(this, "Complete toda la información requerida", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun addAppointmentToFirestore(patientUid: String, doctorUid: String, appointment: AppointmentData) {
         val db = FirebaseFirestore.getInstance()
 
-        val patientRef = db.collection("appointments").document(patientEmail)
+        val patientRef = db.collection("appointments").document(patientUid)
         val newAppointmentRef = patientRef.collection("patientAppointments").document()
-        val doctorRef = db.collection("doctorAppointments").document(doctorEmail)
+        val doctorRef = db.collection("doctorAppointments").document(doctorUid)
         val newDoctorAppointmentRef = doctorRef.collection("appointments").document(newAppointmentRef.id)
 
-        newAppointmentRef.set(appointment)
-            .addOnSuccessListener {
-                newDoctorAppointmentRef.set(appointment)
-                    .addOnSuccessListener {
-                        Log.d("AppointmentActivity", "Cita añadida con éxito.")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w("AppointmentActivity", "Error al añadir la cita del doctor", e)
-                    }
-            }
-            .addOnFailureListener { e ->
-                Log.w("AppointmentActivity", "Error al añadir la cita", e)
-            }
+        db.runBatch { batch ->
+            batch.set(newAppointmentRef, appointment)
+            batch.set(newDoctorAppointmentRef, appointment)
+        }.addOnSuccessListener {
+            Log.d("AppointmentActivity", "Cita añadida con éxito.")
+        }.addOnFailureListener { e ->
+            Log.w("AppointmentActivity", "Error al añadir la cita", e)
+        }
     }
 }
