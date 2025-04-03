@@ -11,7 +11,6 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -36,7 +35,7 @@ class DoctorProfileEditActivity : AppCompatActivity() {
 
         edtDName = findViewById(R.id.editDName)
         edtDSurname = findViewById(R.id.editDSurname)
-        edtDAge = findViewById(R.id.editDAge)
+        edtDAge = findViewById(R.id.editDDob)
         edtOldPassword = findViewById(R.id.editOldPassword)
         edtNewPassword = findViewById(R.id.editNewPassword)
         spinnerField = findViewById(R.id.spinnerField)
@@ -54,15 +53,15 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                 if (document != null && document.exists()) {
                     val doctorData = document.toObject(DoctorData::class.java)
                     // Asignar datos a EditTexts
-                    edtDName.setText(doctorData?.first)
-                    edtDSurname.setText(doctorData?.last)
-                    edtDAge.setText(doctorData?.age)
+                    edtDName.setText(doctorData?.firstName)
+                    edtDSurname.setText(doctorData?.lastName)
+                    edtDAge.setText(doctorData?.dob)
                     // Configurar el spinner para la especialidad
                     val specialties = resources.getStringArray(R.array.especialidades)
                     val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, specialties)
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerField.adapter = adapter
-                    val selectedIndex = specialties.indexOf(doctorData?.field)
+                    val selectedIndex = specialties.indexOf(doctorData?.speciality)
                     spinnerField.setSelection(selectedIndex)
                 }
             }
@@ -185,10 +184,10 @@ class DoctorProfileEditActivity : AppCompatActivity() {
 
     private fun updateDoctorInFirestore(
         userId: String,
-        first: String,
-        last: String,
-        age: String,
-        field: String,
+        firstName: String,
+        lastName: String,
+        dob: String,
+        speciality: String,
         email: String,
         newPassword: String,
         image: String?
@@ -204,14 +203,20 @@ class DoctorProfileEditActivity : AppCompatActivity() {
                 val passwordToUpdate = if (newPassword.isNotEmpty()) newPassword else currentPassword
 
                 val doctorDataInfo = DoctorData(
-                    UID = userId,
-                    first = first,
-                    last = last,
-                    age = age,
-                    field = field,
+                    dob = dob,
                     email = email,
+                    firstName = firstName,
+                    lastName = lastName,
                     password = passwordToUpdate,
-
+                    phoneN = null,  // Si no tienes esta información, deja null o vacía
+                    dni = null,     // Lo mismo para estos campos
+                    uid = userId,
+                    license = null,
+                    speciality = speciality,
+                    startTime = null,
+                    endTime = null,
+                    workDays = null,
+                    breakDuration = null
                 )
 
                 db.collection("doctors")

@@ -1,67 +1,69 @@
 package com.works.muhtas2.doctor
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.works.muhtas2.R
-import com.works.muhtas2.patient.PatientHomePageActivity
-import com.works.muhtas2.patient.PatientLoginActivity
-import com.works.muhtas2.patient.PatientRegisterActivity
 
 class DoctorLoginActivity : AppCompatActivity() {
-    lateinit var btnDoctorLogin: Button
-    lateinit var btnDoctorRegister: Button
-    lateinit var editTxtDoctorLEmail: EditText
-    lateinit var editTxtDoctorLPassword: EditText
-    lateinit var user: FirebaseAuth
+    private lateinit var btnDoctorLogin: Button
+    private lateinit var btnDoctorRegister: Button
+    private lateinit var editTxtDoctorEmail: EditText
+    private lateinit var editTxtDoctorPassword: EditText
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_doctor_login)
 
         btnDoctorLogin = findViewById(R.id.btnDoctorLogin)
         btnDoctorRegister = findViewById(R.id.btnDoctorRegister)
-        editTxtDoctorLEmail = findViewById(R.id.editTxtDoctorLEmail)
-        editTxtDoctorLPassword = findViewById(R.id.editTxtDoctorLPassword)
+        editTxtDoctorEmail = findViewById(R.id.editTxtDoctorLEmail)
+        editTxtDoctorPassword = findViewById(R.id.editTxtDoctorLPassword)
 
-
-
-        user = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         btnDoctorLogin.setOnClickListener {
-            if (editTxtDoctorLEmail.text.toString() == "" || editTxtDoctorLPassword.text.toString() == "") {
-                Toast.makeText(
-                    this,
-                    "Por favor, rellene la información en su totalidad",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                val LoginEmail = editTxtDoctorLEmail.text.toString()
-                val LoginPassword = editTxtDoctorLPassword.text.toString()
-                user.signInWithEmailAndPassword(LoginEmail, LoginPassword)
-                    .addOnCompleteListener(PatientLoginActivity()) { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(
-                                this,
-                                "El usuario ha iniciado sesión con éxito",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            val intent = Intent(this, DoctorHomepageActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(this, task.exception!!.message, Toast.LENGTH_LONG).show()
-                        }
-                    }
-            }
+            loginDoctor()
         }
 
         btnDoctorRegister.setOnClickListener {
-            var intent = Intent(this, DoctorRegisterActivity::class.java)
+            val intent = Intent(this, DoctorRegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun loginDoctor() {
+        val email = editTxtDoctorEmail.text.toString().trim()
+        val password = editTxtDoctorPassword.text.toString().trim()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            showToast("Por favor, complete todos los campos.")
+            return
+        }
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    showToast("Inicio de sesión exitoso.")
+                    navigateToHome()
+                } else {
+                    showToast(task.exception?.message ?: "Error al iniciar sesión.")
+                }
+            }
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, DoctorHomepageActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

@@ -1,12 +1,12 @@
 package com.works.muhtas2.doctor
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.works.muhtas2.R
@@ -15,30 +15,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DoctorRegisterActivity : AppCompatActivity() {
-    lateinit var spinnerSpecialties: Spinner
-    lateinit var txtRDoctorName: EditText
-    lateinit var txtRDoctorSurname: EditText
-    lateinit var txtRDoctorBirthdate: EditText
-    lateinit var txtRDoctorEmail: EditText
-    lateinit var txtRDoctorPassword: EditText
-    lateinit var txtRDoctorLicense: EditText
-    lateinit var txtRDoctorID: EditText
-    lateinit var txtRDoctorPhone: EditText
-    lateinit var btnRDocConfirm: Button
-    lateinit var btnGoogleSignIn: Button
 
-    lateinit var auth: FirebaseAuth
-    lateinit var db: FirebaseFirestore
+    private lateinit var spinnerSpecialties: Spinner
+    private lateinit var txtRDoctorName: EditText
+    private lateinit var txtRDoctorSurname: EditText
+    private lateinit var txtRDoctorBirthdate: EditText
+    private lateinit var txtRDoctorEmail: EditText
+    private lateinit var txtRDoctorPassword: EditText
+    private lateinit var txtRDoctorLicense: EditText
+    private lateinit var txtRDoctorID: EditText
+    private lateinit var txtRDoctorPhone: EditText
+    private lateinit var btnRDocConfirm: Button
+    private lateinit var btnGoogleSignIn: Button
 
-    lateinit var DoctorName: String
-    lateinit var DoctorSurname: String
-    lateinit var DoctorAge: String
-    lateinit var DoctorField: String
-    lateinit var DoctorEmail: String
-    lateinit var DoctorPassword: String
-    lateinit var DoctorLicense: String
-    lateinit var DoctorID: String
-    lateinit var DoctorPhone: String
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +55,15 @@ class DoctorRegisterActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerSpecialties.adapter = adapter
 
+        setupTextWatchers()
+
+        btnRDocConfirm.setOnClickListener { registerDoctor() }
+        btnGoogleSignIn.setOnClickListener {
+            // Implementar lógica de registro con Google
+        }
+    }
+
+    private fun setupTextWatchers() {
         txtRDoctorLicense.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -85,7 +85,6 @@ class DoctorRegisterActivity : AppCompatActivity() {
 
         txtRDoctorBirthdate.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
-            private val dateFormat = "##/##/####"
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -98,15 +97,9 @@ class DoctorRegisterActivity : AppCompatActivity() {
                 var input = s.toString().replace("[^\\d]".toRegex(), "")
                 val length = input.length
 
-                if (length > 2) {
-                    input = input.substring(0, 2) + "/" + input.substring(2)
-                }
-                if (length > 4) {
-                    input = input.substring(0, 5) + "/" + input.substring(5)
-                }
-                if (length > 8) {
-                    input = input.substring(0, 10)
-                }
+                if (length > 2) input = input.substring(0, 2) + "/" + input.substring(2)
+                if (length > 4) input = input.substring(0, 5) + "/" + input.substring(5)
+                if (length > 10) input = input.substring(0, 10)
 
                 isUpdating = true
                 txtRDoctorBirthdate.setText(input)
@@ -115,73 +108,75 @@ class DoctorRegisterActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-
-        btnRDocConfirm.setOnClickListener {
-            DoctorName = txtRDoctorName.text.toString()
-            DoctorSurname = txtRDoctorSurname.text.toString()
-            val birthdateStr = txtRDoctorBirthdate.text.toString()
-            DoctorAge = calculateAge(birthdateStr).toString()
-            DoctorField = spinnerSpecialties.selectedItem.toString()
-            DoctorEmail = txtRDoctorEmail.text.toString()
-            DoctorPassword = txtRDoctorPassword.text.toString()
-            DoctorLicense = txtRDoctorLicense.text.toString()
-            DoctorID = txtRDoctorID.text.toString()
-            DoctorPhone = txtRDoctorPhone.text.toString()
-
-            if (DoctorName.isNotEmpty() && DoctorSurname.isNotEmpty() && birthdateStr.isNotEmpty() && DoctorField.isNotEmpty() && DoctorEmail.isNotEmpty() && DoctorPassword.isNotEmpty() && DoctorLicense.isNotEmpty() && DoctorID.isNotEmpty() && DoctorPhone.isNotEmpty()) {
-                auth.createUserWithEmailAndPassword(DoctorEmail, DoctorPassword)
-                    .addOnCompleteListener(DoctorRegisterActivity()) { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "User added successfully", Toast.LENGTH_LONG).show()
-                            val user = auth.currentUser
-                            val doctorData = DoctorData(
-                                user!!.uid,
-                                DoctorName,
-                                DoctorSurname,
-                                DoctorAge,
-                                DoctorField,
-                                DoctorEmail,
-                                DoctorPassword,
-                                DoctorLicense,
-                                DoctorID,
-                                DoctorPhone
-                            )
-                            db.collection("doctors").document(user.uid).set(doctorData)
-                                .addOnSuccessListener {
-                                    Log.d("Firestore", "Doctor DocumentSnapshot successfully written!")
-                                }
-                                .addOnFailureListener { e ->
-                                    Log.e("Firestore", "Error writing document", e)
-                                }
-                            Log.d("doctor", doctorData.toString())
-                            val intent = Intent(this@DoctorRegisterActivity, DoctorLoginActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(this, task.exception!!.message, Toast.LENGTH_LONG).show()
-                        }
-                    }
-            } else {
-                Toast.makeText(this, "No introduzca información incompleta", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        btnGoogleSignIn.setOnClickListener {
-            // Implementar lógica de registro con Google
-        }
     }
 
-    private fun calculateAge(birthdate: String): Int {
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-        val birthDate = sdf.parse(birthdate)
-        val today = Calendar.getInstance()
-        val birthDay = Calendar.getInstance()
-        birthDay.time = birthDate
+    private fun registerDoctor() {
+        val doctorName = txtRDoctorName.text.toString().trim()
+        val doctorSurname = txtRDoctorSurname.text.toString().trim()
+        val birthdateStr = txtRDoctorBirthdate.text.toString().trim()
+        val doctorEmail = txtRDoctorEmail.text.toString().trim()
+        val doctorPassword = txtRDoctorPassword.text.toString().trim()
+        val doctorLicense = txtRDoctorLicense.text.toString().trim()
+        val doctorID = txtRDoctorID.text.toString().trim()
+        val doctorPhone = txtRDoctorPhone.text.toString().trim()
+        val doctorSpeciality = spinnerSpecialties.selectedItem.toString()
 
-        var age = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
-        if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR)) {
-            age--
+        if (doctorName.isEmpty() || doctorSurname.isEmpty() || birthdateStr.isEmpty() ||
+            doctorEmail.isEmpty() || doctorPassword.isEmpty() || doctorLicense.isEmpty() ||
+            doctorID.isEmpty() || doctorPhone.isEmpty()
+        ) {
+            showToast("Por favor, complete toda la información")
+            return
         }
-        return age
+
+        auth.createUserWithEmailAndPassword(doctorEmail, doctorPassword)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    user?.let {
+                        val doctorData = DoctorData(
+                            dob = birthdateStr,
+                            email = doctorEmail,
+                            firstName = doctorName,
+                            lastName = doctorSurname,
+                            password = doctorPassword,
+                            phoneN = doctorPhone,
+                            dni = doctorID,
+                            uid = it.uid,
+                            license = doctorLicense,
+                            speciality = doctorSpeciality,
+                            startTime = null,
+                            endTime = null,
+                            workDays = null,
+                            breakDuration = null
+                        )
+                        saveDoctorToFirestore(it.uid, doctorData)
+                    }
+                } else {
+                    showToast(task.exception?.message ?: "Error al registrar usuario")
+                }
+            }
+    }
+
+    private fun saveDoctorToFirestore(uid: String, doctorData: DoctorData) {
+        db.collection("doctors").document(uid).set(doctorData)
+            .addOnSuccessListener {
+                Log.d("Firestore", "Doctor registrado con éxito.")
+                navigateToLogin()
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al guardar el doctor en Firestore", e)
+                showToast("Error al guardar los datos")
+            }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, DoctorLoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

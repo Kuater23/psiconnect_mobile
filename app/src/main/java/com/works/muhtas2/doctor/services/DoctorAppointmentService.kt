@@ -7,45 +7,49 @@ class DoctorAppointmentService {
     private val db = FirebaseFirestore.getInstance()
 
     fun getAppointmentsForDoctor(
-        doctorEmail: String,
+        doctorUid: String,
         callback: (List<DoctorAppointmentData>) -> Unit
     ) {
         db.collection("doctorAppointments")
-            .document(doctorEmail)
+            .document(doctorUid)
             .collection("appointments")
             .get()
             .addOnSuccessListener { documents ->
                 val appointmentsList = documents.mapNotNull { document ->
                     val appointment = document.toObject(DoctorAppointmentData::class.java)
-                    appointment?.copy(id = document.id)
+                        ?.copy(id = document.id)
+                    appointment
                 }
                 callback(appointmentsList)
             }
+            .addOnFailureListener {
+                callback(emptyList()) // En caso de error, devolver una lista vacía
+            }
     }
 
-    fun deleteAppointment(doctorEmail: String, patientEmail: String, appointmentId: String, callback: (Boolean) -> Unit) {
-        // Doktor koleksiyonundan sil
-        db.collection("doctorAppointments")
-            .document(doctorEmail)
+    fun deleteAppointment(
+        doctorUid: String,
+        patientUid: String,
+        appointmentId: String,
+        callback: (Boolean) -> Unit
+    ) {
+        val doctorRef = db.collection("doctorAppointments")
+            .document(doctorUid)
             .collection("appointments")
             .document(appointmentId)
-            .delete()
-            .addOnSuccessListener {
-                // Hasta koleksiyonundan da sil
-                db.collection("appointments")
-                    .document(patientEmail)
-                    .collection("patientAppointments")
-                    .document(appointmentId)
-                    .delete()
-                    .addOnSuccessListener {
-                        callback(true)
-                    }
-                    .addOnFailureListener {
-                        callback(false)
-                    }
-            }
-            .addOnFailureListener {
-                callback(false)
-            }
+
+        val patientRef = db.collection("appointments")
+            .document(patientUid)
+            .collection("patientAppointments")
+            .document(appointmentId)
+
+        db.runBatch { batch ->
+            batch.delete(doctorRef)
+            batch.delete(patientRef)
+        }.addOnSuccessListener {
+            callback(true)
+        }.addOnFailureListener {
+            callback(false)
+        }
     }
 }
